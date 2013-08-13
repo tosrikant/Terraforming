@@ -15,27 +15,33 @@ public class Main {
     Random rand = new Random("aicomp".hashCode());
 
     Scanner scanner = new Scanner(System.in);
-    System.out.println("Your player name");
 
+    boolean firstTime = true;
     while (scanner.hasNext()) {
       Game game = parseGame(scanner);
+      if(firstTime){
+        firstTime = false;
+        System.out.println("Your player name"); // 表示名
+        continue;
+      }
       // Can conduct only one kind of commands, 'move' or 'build'
       if (rand.nextInt(1) == 0) {
-        List<Point> points = game.field.getPointsWithRobots(game.myId);
+        List<Point> points = game.field.getPointsWithRobots(game.myId); // 自軍のロボットのいるセルを列挙
         for (Point point : points) {
           if (rand.nextInt(1) == 0) {
             Tile tile = game.field.tiles.get(point);
+            if(tile.isHole)continue; // 穴からは動けない
             int dirIndex = rand.nextInt(Direction.values().length);
-            move(point, Direction.values()[dirIndex], rand.nextInt(tile.robot) + 1);
+            move(point, Direction.values()[dirIndex], rand.nextInt(tile.robot) + 1); // 適当に移動
           }
         }
       } else if (rand.nextInt(3) == 0) {
-        List<Point> points = game.field.getPointsWithRobots(game.myId);
+        List<Point> points = game.field.getPointsWithRobots(game.myId); // 自軍のロボットのいるセルを列挙
         for (Point point : points) {
           int instIndex = rand.nextInt(Installation.values().length - 1) + 1;
           // Can conduct only one command of 'build'
           if (rand.nextInt(3) == 0) {
-            build(point, Installation.values()[instIndex]);
+            build(point, Installation.values()[instIndex]); // 適当に建設
             // Avoid to conduct two or more than 'build' commands
             break;
           }
